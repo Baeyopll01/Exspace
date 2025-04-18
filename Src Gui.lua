@@ -1332,20 +1332,53 @@ function Library:CreateWindow(info)
 
 				return New
 			end
-
-			function Main:CreateSlider(info)
+			
+			local TweenService = game:GetService("TweenService")
+			local UserInputService = game:GetService("UserInputService")
+			
+			local function tw(t)
+				local tweenInfo = TweenInfo.new(t.t, t.s, Enum.EasingDirection[t.d])
+				return TweenService:Create(t.v, tweenInfo, t.g)
+			end
+			
+			function CreateSlider(info)
 				local Title = info.Title
 				local Desc = info.Desc or ''
 				local Min = info.Min or 0
 				local Max = info.Max or 100
-				local Value = info.Value or Max/2
+				local Value = info.Value or Max / 2
 				local Rounding = info.Rounding or 0
 				local Callback = info.Callback or function() end
 			
-				local Slider = background(Section_1, Title, Desc)
-				Slider.Frame.UIPadding.PaddingRight = UDim.new(0, 270)
+				local Frame = Instance.new("Frame")
+				Frame.Size = UDim2.new(0, 300, 0, 50)
+				Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+				Frame.BorderSizePixel = 0
+				Frame.Parent = script.Parent
 			
-				-- [UI สร้างเหมือนเดิม...]
+				local ValueBar = Instance.new("Frame")
+				ValueBar.Name = "ValueBar"
+				ValueBar.Size = UDim2.new(0.8, 0, 0, 4)
+				ValueBar.Position = UDim2.new(0.1, 0, 0.5, 0)
+				ValueBar.BackgroundColor3 = Color3.fromRGB(47, 48, 51)
+				ValueBar.BorderSizePixel = 0
+				ValueBar.Parent = Frame
+			
+				local BarValue = Instance.new("Frame")
+				BarValue.Name = "BarValue"
+				BarValue.Size = UDim2.new(0.5, 0, 1, 0)
+				BarValue.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				BarValue.BorderSizePixel = 0
+				BarValue.Parent = ValueBar
+			
+				local ValueBox = Instance.new("TextBox")
+				ValueBox.Size = UDim2.new(0, 40, 0, 20)
+				ValueBox.Position = UDim2.new(0.92, 0, 0.3, 0)
+				ValueBox.Text = tostring(Value)
+				ValueBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+				ValueBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+				ValueBox.BorderSizePixel = 0
+				ValueBox.Parent = Frame
 			
 				local function roundToDecimal(value, decimals)
 					local factor = 10 ^ decimals
@@ -1355,68 +1388,60 @@ function Library:CreateWindow(info)
 				local function updateSlider(value)
 					value = math.clamp(value, Min, Max)
 					value = roundToDecimal(value, Rounding)
-					tw({v = BarValue_1, t = 0.15, s = Enum.EasingStyle.Exponential, d = "Out", g = {
-						Size = UDim2.new((value - Min) / (Max - Min), 0, 1, 0)
-					}}):Play()
-					TextBox_1.Text = tostring(value)
-					tw({v = ValueBox_1, t = 0.15, s = Enum.EasingStyle.Linear, d = "Out", g = {
-						Size = UDim2.new(0, TextBox_1.TextBounds.X + 10, 0, 15)
-					}}):Play()
-					Callback(value) -- เก็บค่า!
+					if BarValue then
+						tw({
+							v = BarValue,
+							t = 0.15,
+							s = Enum.EasingStyle.Exponential,
+							d = "Out",
+							g = {
+								Size = UDim2.new((value - Min) / (Max - Min), 0, 1, 0)
+							}
+						}):Play()
+					end
+					ValueBox.Text = tostring(value)
+					Callback(value)
 				end
 			
-				updateSlider(Value or 0)
+				updateSlider(Value)
 			
-				TextBox_1.FocusLost:Connect(function()
-					local value = tonumber(TextBox_1.Text) or Min
-					updateSlider(value)
+				ValueBox.FocusLost:Connect(function()
+					local num = tonumber(ValueBox.Text)
+					if num then
+						updateSlider(num)
+					else
+						updateSlider(Value)
+					end
 				end)
 			
 				local dragging = false
-				local function move(input)
-					local sliderBar = ValueBar_1
-					local relativeX = math.clamp((input.Position.X - sliderBar.AbsolutePosition.X) / sliderBar.AbsoluteSize.X, 0, 1)
-					local value = relativeX * (Max - Min) + Min
-					updateSlider(value)
-				end
-			
-				Click_1.InputBegan:Connect(function(input)
-					if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				ValueBar.InputBegan:Connect(function(input)
+					if input.UserInputType == Enum.UserInputType.MouseButton1 then
 						dragging = true
+						local function move(input)
+							local relativeX = math.clamp((input.Position.X - ValueBar.AbsolutePosition.X) / ValueBar.AbsoluteSize.X, 0, 1)
+							local newValue = relativeX * (Max - Min) + Min
+							updateSlider(newValue)
+						end
 						move(input)
 					end
 				end)
 			
-				Click_1.InputEnded:Connect(function(input)
-					if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				UserInputService.InputEnded:Connect(function(input)
+					if input.UserInputType == Enum.UserInputType.MouseButton1 then
 						dragging = false
 					end
 				end)
 			
-				U.InputChanged:Connect(function(input)
-					if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-						move(input)
+				UserInputService.InputChanged:Connect(function(input)
+					if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+						local relativeX = math.clamp((input.Position.X - ValueBar.AbsolutePosition.X) / ValueBar.AbsoluteSize.X, 0, 1)
+						local newValue = relativeX * (Max - Min) + Min
+						updateSlider(newValue)
 					end
 				end)
-			
-				local New = {}
-				function New:SetTitle(a)
-					Slider.Frame.Title.Text = a
-				end
-				function New:SetDesc(a)
-					if a and a ~= '' then
-						Slider.Frame.Desc.Text = a
-						Slider.Frame.Desc.Visible = true
-					else
-						Slider.Frame.Desc.Visible = false
-					end
-				end
-				function New:SetValue(a)
-					updateSlider(a)
-				end
-				return New
 			end
-
+		
 			function Main:CreateDropdown(info)
 				local Title = info.Title
 				local Desc = info.Desc or ''

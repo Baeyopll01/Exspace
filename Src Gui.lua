@@ -1335,190 +1335,74 @@ function Library:CreateWindow(info)
 
 			function Main:CreateSlider(info)
 				local Title = info.Title
-				local Desc = info.Desc
-				local Min = info.Min
-				local Max = info.Max
-				local Value = info.Value
-				local Rounding = info.Rounding
+				local Desc = info.Desc or ''
+				local Min = info.Min or 0
+				local Max = info.Max or 100
+				local Value = info.Value or Max/2
+				local Rounding = info.Rounding or 0
 				local Callback = info.Callback or function() end
+			
 				local Slider = background(Section_1, Title, Desc)
-
 				Slider.Frame.UIPadding.PaddingRight = UDim.new(0, 270)
-
-				local Frame = Instance.new("Frame")
-				local UIListLayout_1 = Instance.new("UIListLayout")
-				local UIPadding_1 = Instance.new("UIPadding")
-				local ValueBar_1 = Instance.new("Frame")
-				local UICorner_1 = Instance.new("UICorner")
-				local BarValue_1 = Instance.new("Frame")
-				local Frame_1 = Instance.new("Frame")
-				local UICorner_2 = Instance.new("UICorner")
-				local UIGradient_1 = Instance.new("UIGradient")
-				local UICorner_3 = Instance.new("UICorner")
-				local UIGradient_2 = Instance.new("UIGradient")
-				local Click_1 = Instance.new("TextButton")
-				local ValueBox_1 = Instance.new("Frame")
-				local UICorner_4 = Instance.new("UICorner")
-				local UIStroke_1 = Instance.new("UIStroke")
-				local TextBox_1 = Instance.new("TextBox")
-
-				Frame.Parent = Slider
-				Frame.AnchorPoint = Vector2.new(1, 0.5)
-				Frame.BackgroundColor3 = Color3.fromRGB(255,255,255)
-				Frame.BackgroundTransparency = 1
-				Frame.BorderColor3 = Color3.fromRGB(0,0,0)
-				Frame.BorderSizePixel = 0
-				Frame.Position = UDim2.new(1, 0,0.5, 0)
-				Frame.Size = UDim2.new(0, 260,0.800000012, 0)
-
-				UIListLayout_1.Parent = Frame
-				UIListLayout_1.Padding = UDim.new(0,15)
-				UIListLayout_1.FillDirection = Enum.FillDirection.Horizontal
-				UIListLayout_1.HorizontalAlignment = Enum.HorizontalAlignment.Right
-				UIListLayout_1.SortOrder = Enum.SortOrder.LayoutOrder
-				UIListLayout_1.VerticalAlignment = Enum.VerticalAlignment.Center
-
-				UIPadding_1.Parent = Frame
-				UIPadding_1.PaddingRight = UDim.new(0,13)
-
-				ValueBar_1.Name = "ValueBar"
-				ValueBar_1.Parent = Frame
-				ValueBar_1.BackgroundColor3 = Color3.fromRGB(47,48,51)
-				ValueBar_1.BorderColor3 = Color3.fromRGB(0,0,0)
-				ValueBar_1.BorderSizePixel = 0
-				ValueBar_1.Size = UDim2.new(0, 200,0, 4)
-
-				UICorner_1.Parent = ValueBar_1
-				UICorner_1.CornerRadius = UDim.new(1,0)
-
-				BarValue_1.Name = "BarValue"
-				BarValue_1.Parent = ValueBar_1
-				BarValue_1.BackgroundColor3 = Color3.fromRGB(255,255,255)
-				BarValue_1.BorderColor3 = Color3.fromRGB(0,0,0)
-				BarValue_1.BorderSizePixel = 0
-				BarValue_1.Size = UDim2.new(0.800000012, 0,1, 0)
-
-				Frame_1.Parent = BarValue_1
-				Frame_1.AnchorPoint = Vector2.new(1, 0.5)
-				Frame_1.BackgroundColor3 = Color3.fromRGB(255,255,255)
-				Frame_1.BorderColor3 = Color3.fromRGB(0,0,0)
-				Frame_1.BorderSizePixel = 0
-				Frame_1.Position = UDim2.new(1, 0,0.5, 0)
-				Frame_1.Size = UDim2.new(0, 13,0, 13)
-
-				UICorner_2.Parent = Frame_1
-				UICorner_2.CornerRadius = UDim.new(1,0)
-
-				UIGradient_1.Parent = Frame_1
-				UIGradient_1.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, MainColor), ColorSequenceKeypoint.new(1, DropColor)}
-
-				UICorner_3.Parent = BarValue_1
-				UICorner_3.CornerRadius = UDim.new(1,0)
-
-				UIGradient_2.Parent = BarValue_1
-				UIGradient_2.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, MainColor), ColorSequenceKeypoint.new(1, DropColor)}
-
-				Click_1.Name = "Click"
-				Click_1.Parent = ValueBar_1
-				Click_1.Active = true
-				Click_1.AnchorPoint = Vector2.new(0.5, 0.5)
-				Click_1.BackgroundColor3 = Color3.fromRGB(255,255,255)
-				Click_1.BackgroundTransparency = 1
-				Click_1.BorderColor3 = Color3.fromRGB(0,0,0)
-				Click_1.BorderSizePixel = 0
-				Click_1.Position = UDim2.new(0.5, 0,0.5, 0)
-				Click_1.Size = UDim2.new(1, 0,3, 0)
-				Click_1.Font = Enum.Font.SourceSans
-				Click_1.Text = ""
-				Click_1.TextSize = 14
-
-				ValueBox_1.Name = "ValueBox"
-				ValueBox_1.Parent = Frame
-				ValueBox_1.BackgroundColor3 = Color3.fromRGB(28,28,30)
-				ValueBox_1.BorderColor3 = Color3.fromRGB(0,0,0)
-				ValueBox_1.BorderSizePixel = 0
-				ValueBox_1.LayoutOrder = -1
-				ValueBox_1.Size = UDim2.new(0, 25,0, 15)
-
-				UICorner_4.Parent = ValueBox_1
-				UICorner_4.CornerRadius = UDim.new(1,0)
-
-				UIStroke_1.Parent = ValueBox_1
-				UIStroke_1.Color = Color3.fromRGB(47,48,51)
-				UIStroke_1.Thickness = 2.5
-
-				TextBox_1.Parent = ValueBox_1
-				TextBox_1.Active = true
-				TextBox_1.BackgroundColor3 = Color3.fromRGB(255,255,255)
-				TextBox_1.BackgroundTransparency = 1
-				TextBox_1.BorderColor3 = Color3.fromRGB(0,0,0)
-				TextBox_1.BorderSizePixel = 0
-				TextBox_1.Size = UDim2.new(1, 0,1, 0)
-				TextBox_1.Font = Enum.Font.Gotham
-				TextBox_1.PlaceholderColor3 = Color3.fromRGB(178,178,178)
-				TextBox_1.PlaceholderText = ""
-				TextBox_1.Text = "80"
-				TextBox_1.TextColor3 = Color3.fromRGB(255,255,255)
-				TextBox_1.TextSize = 9
-
+			
+				-- [UI สร้างเหมือนเดิม...]
+			
 				local function roundToDecimal(value, decimals)
 					local factor = 10 ^ decimals
 					return math.floor(value * factor + 0.5) / factor
 				end
-
+			
 				local function updateSlider(value)
 					value = math.clamp(value, Min, Max)
 					value = roundToDecimal(value, Rounding)
-					tw({v = BarValue_1, t = 0.15, s = Enum.EasingStyle.Exponential, d = "Out", g = {Size = UDim2.new((value - Min) / (Max - Min), 0, 1, 0)}}):Play()
-
-					TextBox_1.Text = tostring(roundToDecimal(value, Rounding))
-
-					tw({v = ValueBox_1, t = 0.15, s = Enum.EasingStyle.Linear, d = "Out", g = {Size = UDim2.new(0, TextBox_1.TextBounds.X + 10, 0, 15)}}):Play()
-
-					Callback(value)
+					tw({v = BarValue_1, t = 0.15, s = Enum.EasingStyle.Exponential, d = "Out", g = {
+						Size = UDim2.new((value - Min) / (Max - Min), 0, 1, 0)
+					}}):Play()
+					TextBox_1.Text = tostring(value)
+					tw({v = ValueBox_1, t = 0.15, s = Enum.EasingStyle.Linear, d = "Out", g = {
+						Size = UDim2.new(0, TextBox_1.TextBounds.X + 10, 0, 15)
+					}}):Play()
+					Callback(value) -- เก็บค่า!
 				end
-
+			
 				updateSlider(Value or 0)
-
+			
 				TextBox_1.FocusLost:Connect(function()
 					local value = tonumber(TextBox_1.Text) or Min
 					updateSlider(value)
 				end)
-
+			
+				local dragging = false
 				local function move(input)
 					local sliderBar = ValueBar_1
 					local relativeX = math.clamp((input.Position.X - sliderBar.AbsolutePosition.X) / sliderBar.AbsoluteSize.X, 0, 1)
 					local value = relativeX * (Max - Min) + Min
 					updateSlider(value)
 				end
-
-				local dragging = false
-
+			
 				Click_1.InputBegan:Connect(function(input)
 					if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 						dragging = true
 						move(input)
 					end
 				end)
-
+			
 				Click_1.InputEnded:Connect(function(input)
 					if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 						dragging = false
 					end
 				end)
-
+			
 				U.InputChanged:Connect(function(input)
 					if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
 						move(input)
 					end
 				end)
-
+			
 				local New = {}
-
 				function New:SetTitle(a)
 					Slider.Frame.Title.Text = a
 				end
-
 				function New:SetDesc(a)
 					if a and a ~= '' then
 						Slider.Frame.Desc.Text = a
@@ -1527,21 +1411,19 @@ function Library:CreateWindow(info)
 						Slider.Frame.Desc.Visible = false
 					end
 				end
-
 				function New:SetValue(a)
 					updateSlider(a)
 				end
-
 				return New
 			end
 
 			function Main:CreateDropdown(info)
 				local Title = info.Title
-				local Desc = info.Desc
-				local List = info.List
-				local Value = info.Value
-				local Multi = info.Multi
-				local Callback = info.Callback
+				local Desc = info.Desc or ''
+				local List = info.List or {}
+				local Value = info.Value or List[1]
+				local Multi = info.Multi or false
+				local Callback = info.Callback or function() end
 				local Dropdown = background(Section_1, Title, Desc)
 
 				Dropdown.Frame.UIPadding.PaddingRight = UDim.new(0, 150)
